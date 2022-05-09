@@ -60,9 +60,6 @@
 
     </q-stepper>
 
-
-
-    <button @click="playBoth">Play a sound</button>
   </div>
 </template>
 
