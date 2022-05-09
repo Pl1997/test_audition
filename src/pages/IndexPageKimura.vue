@@ -29,7 +29,7 @@
             </div>
           </q-btn>
           <div :style="{overflow:'hidden', transition: 'all 1s', maxHeight: (state.willPlay[objKey]||0)>=question.all.length?'100%':'0%'}">
-              <q-checkbox size="lg" v-model="question.answers" :val="trial"/>
+              <q-checkbox size="lg" keep-color v-model="question.answers" :val="trial" :color="state.showAnswers&&(question.left===trial || question.right==trial)?'green':''"/>
           </div>
 
         </div>
@@ -43,7 +43,11 @@
           <q-btn :disabled="state.hasPlayedDichotic[objKey]" icon="play_arrow" @click="playBoth(question.left, question.right,objKey)" :loading="state.playing" round size="lg"/>
         </div>
       </q-slide-transition>
-
+      <q-toggle
+        v-model="state.showAnswers"
+        label="Montrer les réponses"
+        color="green"
+      />
         <q-stepper-navigation>
           <q-btn @click="$refs.stepper.next()" color="primary" :disabled="question.answers.length>2" :label="step === Object.keys(questions).length ? 'Finish' : 'Continue'" />
           <q-btn v-if="step > 1" flat color="primary" @click="$refs.stepper.previous()" label="Back" class="q-ml-sm" />
@@ -89,7 +93,7 @@ export default defineComponent({
       }
     })
     const answers=reactive(Object.fromEntries(Object.keys(questions).map(k => [k, []])))
-    const state=reactive({currentQuestion:undefined, playing: false, willPlay: {}, hasPlayedDichotic: {}})
+    const state=reactive({currentQuestion:undefined, showAnswers:false, playing: false, willPlay: {}, hasPlayedDichotic: {}})
     const generalSpecs={minMelId:0, maxMelId:9, minTxtId:1, maxTxtId:4}//mettre des nombres inférieurs de 1 aux valeurs souhaitées
     let availableOptions=shuffle(product(range(generalSpecs.minMelId,generalSpecs.maxMelId+1),range(generalSpecs.minTxtId,generalSpecs.maxTxtId+1)))
     const generateDichoticSets=(nbSets,minId,maxId)=>{
