@@ -2,6 +2,7 @@
   <div class="q-pa-md">
     <q-stepper
       v-model="step"
+      v-show="!(playStereoState===null || playLeftState===null || playRightState)"
       ref="stepper"
       color="primary"
       contracted
@@ -502,25 +503,29 @@ export default defineComponent({
       sprite: spritemap,
       onend:onEndStereo, 
       onplay:onStartPlaying
-    }).play
+    })
+    const playStereoState = reactive(playStereo.duration)
     const playRight = useSound(buttonSfx, {
       sprite: spritemap,
       stereo: -1.0, 
       onend:onEndAny, 
       onplay:onStartPlaying
-    }).play
-
+    })
+    const playRightState = reactive(playRight.duration)
     const playLeft = useSound(buttonSfx, {
       stereo: 1.0,
       sprite: spritemap, 
       onend:onEndAny, 
       onplay:onStartPlaying
-    }).play
+    })
+    const playLeftState = reactive(playLeft.duration)
+
+
     const playBoth = (idR,idL,questionName) => {
       state.currentQuestion=questionName
       if (!state.hasPlayedDichotic[state.currentQuestion]){//on vérifie que le son n'a pas déjà été joué
-        playRight({ id: idR })
-        playLeft({ id: idL })
+        playRight.play({ id: idR })
+        playLeft.play({ id: idL })
         state.hasPlayedDichotic[state.currentQuestion]=true
         state.isPlayingDichotic[state.currentQuestion]=true
       }
@@ -531,7 +536,7 @@ export default defineComponent({
       state.currentQuestion=questionName
 //      if (state.willPlay<questions[questionName].all.length){ //on détermine quel type de son émettre. Vu qu'on commence par la stéréo, on regarde si le bon nombre d'essais stereo a été accompli
 //        console.log(questions[questionName].all[state.willPlay.questionName])
-        playStereo({id: questions[questionName].all[(state.willPlay[questionName]||0)]})
+        playStereo.play({id: questions[questionName].all[(state.willPlay[questionName]||0)]})
 //      }
 //      else{
 //        console.log('tout a déjà été joué')
@@ -541,7 +546,7 @@ export default defineComponent({
     
 
     return {
-      playBoth, answers, step:ref(1), questions, change, playing, state
+      playBoth, answers, step:ref(1), questions, change, playing, state, playStereoState, playRightState, playLeftState
     }
   },
   name: 'IndexPage'
