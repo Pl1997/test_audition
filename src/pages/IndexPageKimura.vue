@@ -283,8 +283,8 @@ export default defineComponent({
        })
     const spritemap = {
     "English_S01_M01_1": [
-      3000, //0
-      3100 //6000
+      0,
+      6000
     ],
     "English_S01_M06_1": [
       7000,
@@ -516,8 +516,8 @@ export default defineComponent({
     const playBoth = (idR,idL,questionName) => {
       state.currentQuestion=questionName
       if (!state.hasPlayedDichotic[state.currentQuestion]){//on vérifie que le son n'a pas déjà été joué
-        playRight({ id: "English_S01_M01_1" }) //id: idR
-        playLeft({ id: "English_S01_M01_1" }) //id:idL
+        playRight({ id: idR })
+        playLeft({ id: idL })
         state.hasPlayedDichotic[state.currentQuestion]=true
       }
 
